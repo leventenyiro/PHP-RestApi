@@ -1,17 +1,23 @@
 <?php
+
 include ("controllers/controller.php");
 
+function method($method) {
+    return $_SERVER["REQUEST_METHOD"] == $method;
+}
 
-//echo $_SERVER["REQUEST_METHOD"];
+function route($route) {
+    return explode("/", substr($_SERVER["PATH_INFO"], 1))[0] == $route;
+}
 
-//$url = $_SERVER["REQUEST_URI"];
-//echo $url;
+function params($quantity) {
+    return length(json_encode(explode("/", substr($_SERVER["PATH_INFO"], 1))));
+}
 
-//$splitted = explode("/", $url);
-//echo $splitted[3];
-
-if ($_SERVER["REQUEST_METHOD"] && explode("/", $_SERVER["REQUEST_URI"])[3] == "product") {
+if (method("GET") && route("product") && !isset($_GET["id"])) {
     getAll();
+} else if (method("GET") && route("product")) {
+    getOne($_GET["id"]);
 }
 
 ?>

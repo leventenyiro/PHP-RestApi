@@ -1,17 +1,17 @@
 <?php
 
 class Database {
-    public $servername = "localhost";
-    public $username = "root";
+    public $host = "localhost";
+    public $user = "root";
     public $password = "";
-    public $dbname = "restapi";
+    public $database = "restapi";
     public $conn = NULL;
     public $sql = NULL;
     public $result = NULL;
     public $row = NULL;
 
     public function __construct() {
-		$this->conn = new mysqli($this->servername, $this->username, $this->password, $this->dbname);
+		$this->conn = new mysqli($this->host, $this->user, $this->password, $this->database);
 		if ($this->conn->connect_error) {
 			die ("Connection failed: " . $this->conn->connect_error);
 		}
@@ -32,6 +32,13 @@ class Database {
         }
         return json_encode($arr);
         //echo $this->result;
+    }
+
+    public function getOne($id) {
+        $this->sql = sprintf("SELECT * FROM product WHERE id = '%s'", $id);
+        $this->result = $this->conn->query($this->sql);
+
+        return json_encode($this->result->fetch_assoc());
     }
 
     public function __destruct() {

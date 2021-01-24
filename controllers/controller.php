@@ -17,4 +17,12 @@ function getAll() {
     echo $result;
 }
 
+function getOne($id) {
+    $db = new Database();
+    $result = $db->getOne($id);
+    if ($result != "null") {
+        echo $result;
+    }
+}
+
 ?>
