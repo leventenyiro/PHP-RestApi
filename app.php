@@ -7,7 +7,13 @@ function method($method) {
 }
 
 function route($route) {
-    return explode("/", substr($_SERVER["PATH_INFO"], 1))[0] == $route;
+    if (isset($_SERVER["PATH_INFO"])) {
+        $pathInfo = substr($_SERVER["PATH_INFO"], 1);
+        if ($pathInfo != "") {
+            return explode("/", $pathInfo)[0] == $route;
+        }
+    }
+    return null;
 }
 
 function params($quantity) {
@@ -17,7 +23,13 @@ function params($quantity) {
 if (method("GET") && route("product") && !isset($_GET["id"])) {
     getAll();
 } else if (method("GET") && route("product")) {
-    getOne($_GET["id"]);
+    getOne();
+} else if (method("POST") && route("login")) {
+    login();
+} else if (method("POST") && route("test")) {
+    postTest();
+} else if (method("GET") && route("session")) {
+    session();
 }
 
 ?>
