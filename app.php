@@ -28,8 +28,10 @@ if (method("GET") && route("product") && !isset($_GET["id"])) {
     login();
 } else if (method("POST") && route("test")) {
     postTest();
-} else if (method("GET") && route("session")) {
+} else if (method("GET") && route("login")) {
     session();
+} else if (method("POST") && route("logout")) {
+    logout();
 }
 
 ?>
