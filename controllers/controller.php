@@ -1,6 +1,7 @@
 <?php
 
 include ("models/Database.php");
+include ("models/Session.php");
 
 function getAll() {
     // a php automatikusan átvesz adatokat
@@ -27,45 +28,42 @@ function getOne() {
 
 // SESSION
 function login() {
-    /*session_start();
-    if (!isset($_SESSION["userId"])) {
-        $_SESSION["userId"] = "";
-    }*/
 
     if (!isset($_POST["usernameEmail"]) || empty($_POST["usernameEmail"]) || !isset($_POST["password"]) || empty($_POST["password"])) {
         echo json_encode(array("error" => "Something is missing!"));
     } else {
         $db = new Database();
-        $result = $db->login();
-        if (password_verify($_POST["password"], json_decode($result, true)["password"])) {
-            //$_SESSION["userId"] = json_decode($result, true)["id"];
-            //echo json_encode($_COOKIE);
-            //session_start();
-            //session_id(json_decode($result, true)["id"]);
-            //$_COOKIE["sessionId"] = $sessionId;
-            //echo json_encode($_COOKIE);
-            //setcookie("userId", json_decode($result, true)["id"], time() + 86400, "/");
-            $_SESSION["userId"] = json_decode($result, true)["id"];
-        } else {
+        $login = $db->login();
+        if (count(json_decode($login, true)) != 1) {
             echo json_encode(array("error" => "Unsuccessful login!"));
+        } else {
+            if (password_verify($_POST["password"], json_decode($login, true)[0]["password"])) {
+                $session = new Session();
+                $session->login(json_decode($login, true)[0]);
+
+                http_response_code(200);
+                echo json_encode(array("message" => "Successful login"));
+            } else {
+                echo json_encode(array("error" => "Unsuccessful login!"));
+            }
         }
+
     }
 }
 
 function session() {
-    //echo $_COOKIE["session"];
-    //session_get_cookie_params($_COOKIE["session"]);
-    //echo json_encode($_SESSION);
-    //echo $_COOKIE["userId"];
-    echo json_encode($_COOKIE["session"]);
+    $session = new Session();
+    $result = $session->session();
+    if ($result == null) {
+        echo json_encode(array("error" => "You are not logged in!"));
+    } else {
+        // userId
+        echo json_encode($result);
+    }
 }
 
 function logout() {
-    session_destroy();
-}
-
-function postTest() {
-    echo json_encode($_POST);
+    setcookie("session", "", time() - 3600);
 }
 
 ?>

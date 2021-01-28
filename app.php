@@ -24,13 +24,11 @@ if (method("GET") && route("product") && !isset($_GET["id"])) {
     getAll();
 } else if (method("GET") && route("product")) {
     getOne();
-} else if (method("POST") && route("login")) {
+} else if (method("POST") && route("session")) {
     login();
-} else if (method("POST") && route("test")) {
-    postTest();
-} else if (method("GET") && route("login")) {
+} else if (method("GET") && route("session")) {
     session();
-} else if (method("POST") && route("logout")) {
+} else if (method("DELETE") && route("session")) {
     logout();
 }
 

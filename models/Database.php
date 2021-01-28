@@ -42,7 +42,11 @@ class Database {
         $sql = sprintf("SELECT id, password, email, email_verified FROM user WHERE username = '%s' OR email = '%s'", $_POST["usernameEmail"], $_POST["usernameEmail"]);
         $result = $this->conn->query($sql);
 
-        return json_encode($result->fetch_assoc());
+        $arr = array();
+        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $arr[] = $row;
+        }
+        return json_encode($arr);
     }
 
     public function __destruct() {
