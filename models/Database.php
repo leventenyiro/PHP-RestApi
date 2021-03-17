@@ -5,14 +5,14 @@ class Database {
     private $user = "root";
     private $password = "";
     private $database = "restapi";
-    private $conn = NULL;
+    public $conn = NULL;
 
     public function __construct() {
 		$this->conn = new mysqli($this->host, $this->user, $this->password, $this->database);
 		if ($this->conn->connect_error) {
 			die ("Connection failed: " . $this->conn->connect_error);
 		}
-		$this->conn->query("SET NAMES 'UTF8';");
+        $this->conn->query("SET NAMES 'UTF8';");
 	}
 
     public function getAll() {
@@ -35,18 +35,6 @@ class Database {
         $result = $this->conn->query($sql);
 
         return json_encode($result->fetch_assoc());
-    }
-
-    // SESSION
-    public function login() {
-        $sql = sprintf("SELECT id, password, email, email_verified FROM user WHERE username = '%s' OR email = '%s'", $_POST["usernameEmail"], $_POST["usernameEmail"]);
-        $result = $this->conn->query($sql);
-
-        $arr = array();
-        while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            $arr[] = $row;
-        }
-        return json_encode($arr);
     }
 
     public function __destruct() {

@@ -1,7 +1,9 @@
 <?php
 
-include ("models/Database.php");
-include ("models/Session.php");
+include_once 'models/Database.php';
+include_once 'models/User.php';
+
+include_once 'models/Session.php';
 
 function getAll() {
     // a php automatikusan átvesz adatokat
@@ -33,7 +35,8 @@ function login() {
         echo json_encode(array("error" => "Something is missing!"));
     } else {
         $db = new Database();
-        $login = $db->login();
+        $user = new User($db->conn);
+        $login = $user->login();
         if (count(json_decode($login, true)) != 1) {
             echo json_encode(array("error" => "Unsuccessful login!"));
         } else {
